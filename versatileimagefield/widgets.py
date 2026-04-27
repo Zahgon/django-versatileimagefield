@@ -19,72 +19,36 @@ class ClearableFileInputWithImagePreview(ClearableFileInput):
     template_name = 'versatileimagefield/forms/widgets/versatile_image.html'
 
     def get_hidden_field_id(self, name):
-        i = name.rindex('_')
-        return "id_%s_%d" % (name[:i], int(name[i + 1:]) + 1)
+        pass
 
     def image_preview_id(self, name):
         """Given the name of the image preview tag, return the HTML id for it."""
-        return name + '_imagepreview'
+        pass
 
     def get_ppoi_id(self, name):
         """Given the name of the primary point of interest tag, return the HTML id for it."""
-        return name + '_ppoi'
+        pass
 
     def get_point_stage_id(self, name):
-        return name + '_point-stage'
+        pass
 
     def get_sized_url(self, value):
         """Do not fail completely on invalid images"""
-        try:
-            # Ensuring admin preview thumbnails are created and available
-            value.create_on_demand = True
-            return value.thumbnail['300x300']
-        except Exception:
-            # Do not be overly specific with exceptions; we'd rather show no
-            # thumbnail than crash when showing the widget.
-            return None
+        pass
 
     def get_context(self, name, value, attrs):
         """Get the context to render this widget with."""
-        context = super(ClearableFileInputWithImagePreview, self).get_context(name, value, attrs)
-
-        # It seems Django 1.11's ClearableFileInput doesn't add everything to the 'widget' key, so we can't use it
-        # in MultiWidget. Add it manually here.
-        checkbox_name = self.clear_checkbox_name(name)
-        checkbox_id = self.clear_checkbox_id(checkbox_name)
-
-        context['widget'].update({
-            'checkbox_name': checkbox_name,
-            'checkbox_id': checkbox_id,
-            'is_initial': self.is_initial(value),
-            'input_text': self.input_text,
-            'initial_text': self.initial_text,
-            'clear_checkbox_label': self.clear_checkbox_label,
-        })
-
-        if value and hasattr(value, "url"):
-            context['widget'].update({
-                'hidden_field_id': self.get_hidden_field_id(name),
-                'point_stage_id': self.get_point_stage_id(name),
-                'ppoi_id': self.get_ppoi_id(name),
-                'sized_url': self.get_sized_url(value),
-                'image_preview_id': self.image_preview_id(name),
-            })
-
-        return context
+        pass
 
     def build_attrs(self, base_attrs, extra_attrs=None):
         """Build an attribute dictionary."""
-        attrs = base_attrs.copy()
-        if extra_attrs is not None:
-            attrs.update(extra_attrs)
-        return attrs
+        pass
 
 
 class SizedImageCenterpointWidgetMixIn(object):
 
     def decompress(self, value):
-        return [value, 'x'.join(str(num) for num in value.ppoi)] if value else [None, None]
+        pass
 
 
 class VersatileImagePPOISelectWidget(SizedImageCenterpointWidgetMixIn, MultiWidget):
@@ -113,8 +77,7 @@ class VersatileImagePPOIClickWidget(SizedImageCenterpointWidgetMixIn, MultiWidge
         js = ('versatileimagefield/js/versatileimagefield.js',)
 
     def render(self, name, value, attrs=None, renderer=None):
-        rendered = super(VersatileImagePPOIClickWidget, self).render(name, value, attrs=attrs)
-        return mark_safe('<div class="versatileimagefield">{}</div>'.format(rendered))
+        pass
 
 
 class SizedImageCenterpointClickDjangoAdminWidget(VersatileImagePPOIClickWidget):

@@ -7,5 +7,4 @@ class VersatileImageFieldConfig(AppConfig):
     verbose_name = "VersatileImageField"
 
     def ready(self):
-        from .registry import autodiscover
-        autodiscover()
+        pass

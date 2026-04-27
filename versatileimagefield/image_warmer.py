@@ -32,18 +32,7 @@ def cli_progress_bar(start, end, bar_length=50):
     Based on an implementation found here:
         http://stackoverflow.com/a/13685020/1149774
     """
-    percent = float(start) / end
-    hashes = '#' * int(round(percent * bar_length))
-    spaces = '-' * (bar_length - len(hashes))
-    stdout.write(
-        "\r[{0}] {1}/{2} ({3}%)".format(
-            hashes + spaces,
-            start,
-            end,
-            int(round(percent * 100))
-        )
-    )
-    stdout.flush()
+    pass
 
 
 class VersatileImageFieldWarmer(object):
@@ -109,18 +98,7 @@ class VersatileImageFieldWarmer(object):
             * 'thumbnail__800x800'
         `versatileimagefieldfile`: A VersatileImageFieldFile instance
         """
-        versatileimagefieldfile.create_on_demand = True
-        try:
-            url = get_url_from_image_key(versatileimagefieldfile, size_key)
-        except Exception:  # pragma: no cover
-            success = False
-            url_or_filepath = versatileimagefieldfile.name
-            logger.exception('Thumbnail generation failed',
-                             extra={'path': url_or_filepath})
-        else:
-            success = True
-            url_or_filepath = url
-        return (success, url_or_filepath)
+        pass
 
     def warm(self):
         """
@@ -130,25 +108,4 @@ class VersatileImageFieldWarmer(object):
              VersatileImageField field being processed by `self` of
              files that could not be successfully seeded.
         """
-        num_images_pre_warmed = 0
-        failed_to_create_image_path_list = []
-        total = self.queryset.count() * len(self.size_key_list)
-        for a, instance in enumerate(self.queryset, start=1):
-            for b, size_key in enumerate(self.size_key_list, start=1):
-                success, url_or_filepath = self._prewarm_versatileimagefield(
-                    size_key,
-                    reduce(getattr, self.image_attr.split("."), instance)
-                )
-                if success is True:
-                    num_images_pre_warmed += 1
-                    if self.verbose:
-                        cli_progress_bar(num_images_pre_warmed, total)
-                else:  # pragma: no cover
-                    failed_to_create_image_path_list.append(url_or_filepath)
-
-                if a * b == total and self.verbose:
-                    stdout.write('\n')
-
-        if self.verbose:
-            stdout.flush()
-        return (num_images_pre_warmed, failed_to_create_image_path_list)
+        pass

@@ -59,14 +59,11 @@ class SizedImage(ProcessedImage, dict):
 
     def ppoi_as_str(self):
         """Return PPOI value as a string."""
-        return "%s__%s" % (
-            str(self.ppoi[0]).replace('.', '-'),
-            str(self.ppoi[1]).replace('.', '-')
-        )
+        pass
 
     def get_filename_key(self):
         """Return a string used to identify the resized image."""
-        return self.filename_key
+        pass
 
     @classmethod
     def get_filename_key_regex(cls):
@@ -193,17 +190,4 @@ class SizedImage(ProcessedImage, dict):
                         to signify what operation was done to it.
                         Examples: 'crop' or 'scale'
         """
-        image, file_ext, image_format, mime_type = self.retrieve_image(
-            path_to_image
-        )
-
-        image, save_kwargs = self.preprocess(image, image_format)
-
-        imagefile = self.process_image(
-            image=image,
-            image_format=image_format,
-            save_kwargs=save_kwargs,
-            width=width,
-            height=height
-        )
-        self.save_image(imagefile, save_path_on_storage, file_ext, mime_type)
+        pass

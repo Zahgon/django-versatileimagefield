@@ -79,32 +79,7 @@ class ProcessedImage(object):
                    when the instance is saved. If no additional keyword
                    arguments, return an empty dict ({}).
         """
-        save_kwargs = {'format': image_format}
-
-        # Ensuring image is properly rotated
-        if hasattr(image, '_getexif'):
-            exif_datadict = image._getexif()  # returns None if no EXIF data
-            if exif_datadict is not None:
-                exif = dict(exif_datadict.items())
-                orientation = exif.get(EXIF_ORIENTATION_KEY, None)
-                if orientation == 3:
-                    image = image.transpose(Image.ROTATE_180)
-                elif orientation == 6:
-                    image = image.transpose(Image.ROTATE_270)
-                elif orientation == 8:
-                    image = image.transpose(Image.ROTATE_90)
-
-        # Ensure any embedded ICC profile is preserved
-        save_kwargs['icc_profile'] = image.info.get('icc_profile')
-
-        if hasattr(self, 'preprocess_%s' % image_format):
-            image, addl_save_kwargs = getattr(
-                self,
-                'preprocess_%s' % image_format
-            )(image=image)
-            save_kwargs.update(addl_save_kwargs)
-
-        return image, save_kwargs
+        pass
 
     def preprocess_GIF(self, image, **kwargs):
         """
@@ -114,11 +89,7 @@ class ProcessedImage(object):
             * [0]: Original Image instance (passed to `image`)
             * [1]: Dict with a transparency key (to GIF transparency layer)
         """
-        if 'transparency' in image.info:
-            save_kwargs = {'transparency': image.info['transparency']}
-        else:
-            save_kwargs = {}
-        return (image, save_kwargs)
+        pass
 
     def preprocess_JPEG(self, image, **kwargs):
         """
@@ -130,13 +101,7 @@ class ProcessedImage(object):
                    defined by the `VERSATILEIMAGEFIELD_JPEG_RESIZE_QUALITY`
                    setting)
         """
-        save_kwargs = {
-            'progressive': VERSATILEIMAGEFIELD_PROGRESSIVE_JPEG,
-            'quality': JPEG_QUAL
-        }
-        if image.mode != 'RGB':
-            image = image.convert('RGB')
-        return (image, save_kwargs)
+        pass
 
     def preprocess_WEBP(self, image, **kwargs):
         """
@@ -148,26 +113,11 @@ class ProcessedImage(object):
                    as defined by the `VERSATILEIMAGEFIELD_RESIZE_QUALITY`
                    setting)
         """
-        save_kwargs = {
-            "quality": WEBP_QUAL,
-            "lossless": VERSATILEIMAGEFIELD_LOSSLESS_WEBP,
-            "icc_profile": image.info.get('icc_profile', '')
-        }
-
-        return (image, save_kwargs)
+        pass
 
     def retrieve_image(self, path_to_image):
         """Return a PIL Image instance stored at `path_to_image`."""
-        image = self.storage.open(path_to_image, 'rb')
-        image_format, mime_type = get_image_metadata_from_file(image)
-        file_ext = path_to_image.rsplit('.')[-1]
-
-        return (
-            Image.open(image),
-            file_ext,
-            image_format,
-            mime_type
-        )
+        pass
 
     def save_image(self, imagefile, save_path, file_ext, mime_type):
         """
@@ -181,13 +131,4 @@ class ProcessedImage(object):
             `mime_type`: A valid image mime type (as found in
                          versatileimagefield.utils)
         """
-        file_to_save = InMemoryUploadedFile(
-            imagefile,
-            None,
-            'foo.%s' % file_ext,
-            mime_type,
-            imagefile.tell(),
-            None
-        )
-        file_to_save.seek(0)
-        self.storage.save(save_path, file_to_save)
+        pass

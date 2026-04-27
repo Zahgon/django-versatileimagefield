@@ -55,31 +55,11 @@ class VersatileImageField(ImageField):
         This should be called by the VersatileImageFileDescriptor __get__.
         If self.placeholder_image_name is already set it just returns right away.
         """
-        if self.placeholder_image_name:
-            return
-
-        placeholder_image_name = None
-        placeholder_image = self.placeholder_image
-        if placeholder_image:
-            if isinstance(placeholder_image, OnStoragePlaceholderImage):
-                name = placeholder_image.path
-            else:
-                name = placeholder_image.image_data.name
-            placeholder_image_name = os.path.join(
-                VERSATILEIMAGEFIELD_PLACEHOLDER_DIRNAME, name
-            )
-            if not self.storage.exists(placeholder_image_name):
-                self.storage.save(
-                    placeholder_image_name,
-                    placeholder_image.image_data
-                )
-        self.placeholder_image_name = placeholder_image_name
+        pass
 
     def pre_save(self, model_instance, add):
         """Return field's value just before saving."""
-        file = super(VersatileImageField, self).pre_save(model_instance, add)
-        self.update_ppoi_field(model_instance)
-        return file
+        pass
 
     def update_ppoi_field(self, instance, *args, **kwargs):
         """
@@ -92,26 +72,7 @@ class VersatileImageField(ImageField):
         This field's ppoi can be forced to update with force=True,
         which is how VersatileImageField.pre_save calls this method.
         """
-        # Nothing to update if the field doesn't have have a ppoi
-        # dimension field.
-        if not self.ppoi_field:
-            return
-
-        # getattr will call the VersatileImageFileDescriptor's __get__ method,
-        # which coerces the assigned value into an instance of
-        # self.attr_class(VersatileImageFieldFile in this case).
-        file = getattr(instance, self.attname)
-
-        # file should be an instance of VersatileImageFieldFile or should be
-        # None.
-        ppoi = None
-        if file and not isinstance(file, tuple):
-            if hasattr(file, 'ppoi'):
-                ppoi = file.ppoi
-
-        # Update the ppoi field.
-        if self.ppoi_field:
-            setattr(instance, self.ppoi_field, ppoi)
+        pass
 
     def save_form_data(self, instance, data):
         """
@@ -129,53 +90,11 @@ class VersatileImageField(ImageField):
                   assign to the unchanged file
 
         """
-        to_assign = data
-        if data and isinstance(data, tuple):
-            # This value is coming from a MultiValueField
-            if data[0] is None:
-                # This means the file hasn't changed but we need to
-                # update the ppoi
-                current_field = getattr(instance, self.name)
-                if data[1]:
-                    current_field.ppoi = data[1]
-                to_assign = current_field
-            elif data[0] is False:
-                # This means the 'Clear' checkbox was checked so we
-                # need to empty the field
-                to_assign = ''
-            else:
-                # This means there is a new upload so we need to unpack
-                # the tuple and assign the first position to the field
-                # attribute
-                to_assign = data[0]
-        super(VersatileImageField, self).save_form_data(instance, to_assign)
+        pass
 
     def formfield(self, **kwargs):
         """Return a formfield."""
-        # This is a fairly standard way to set up some defaults
-        # while letting the caller override them.
-        defaults = {}
-        if self.ppoi_field:
-            defaults['form_class'] = SizedImageCenterpointClickDjangoAdminField
-        if kwargs.get('widget') is AdminFileWidget:
-            # Ensuring default admin widget is skipped (in favor of using
-            # SizedImageCenterpointClickDjangoAdminField's default widget as
-            # the default widget choice for use in the admin).
-            # This is for two reasons:
-            # 1. To prevent 'typical' admin users (those who want to use
-            #    the PPOI 'click' widget by default) from having to
-            #    specify a formfield_overrides for each ModelAdmin class
-            #    used by each model that has a VersatileImageField.
-            # 2. If a VersatileImageField does not have a ppoi_field specified
-            #    it will 'fall back' to a ClearableFileInput anyways.
-            # If admin users do, in fact, want to force use of the
-            # AdminFileWidget they can simply subclass AdminFileWidget and
-            # specify it in their ModelAdmin.formfield_overrides (though,
-            # if that's the case, why are they using VersatileImageField in
-            # the first place?)
-            del kwargs['widget']
-        defaults.update(kwargs)
-        return super(VersatileImageField, self).formfield(**defaults)
+        pass
 
 
 class PPOIField(CharField):
@@ -198,29 +117,20 @@ class PPOIField(CharField):
         self.validators.append(validate_ppoi)
 
     def contribute_to_class(self, cls, name, **kwargs):
-        super(PPOIField, self).contribute_to_class(cls, name, **kwargs)
-        setattr(cls, self.name, Creator(self))
+        pass
 
     def from_db_value(self, value, *args, **kwargs):
-        return self.to_python(value)
+        pass
 
     def to_python(self, value):
-        if value is None:
-            value = '0.5x0.5'
-        to_return = validate_ppoi(
-            value, return_converted_tuple=True
-        )
-        return to_return
+        pass
 
     def get_prep_value(self, value):
-        if isinstance(value, tuple):
-            value = 'x'.join(str(num) for num in value)
-        return value
+        pass
 
     def value_to_string(self, obj):
         """Prepare field for serialization."""
-        value = self.value_from_object(obj)
-        return self.get_prep_value(value)
+        pass
 
 
 __all__ = ['VersatileImageField', 'PPOIField']

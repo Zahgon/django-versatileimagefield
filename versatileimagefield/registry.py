@@ -147,12 +147,7 @@ class VersatileImageFieldRegistry(object):
         If a SizedImage subclass isn't already registered to `attr_name`
         NotRegistered will raise.
         """
-        if attr_name not in self._sizedimage_registry:
-            raise NotRegistered(
-                'No SizedImage subclass is registered to %s' % attr_name
-            )
-        else:
-            del self._sizedimage_registry[attr_name]
+        pass
 
     def register_filter(self, attr_name, filterimage_cls):
         """
@@ -187,12 +182,7 @@ class VersatileImageFieldRegistry(object):
         If a FilteredImage subclass isn't already registered to filters.
         `attr_name` NotRegistered will raise.
         """
-        if attr_name not in self._filter_registry:
-            raise NotRegistered(
-                'No FilteredImage subclass is registered to %s' % attr_name
-            )
-        else:
-            del self._filter_registry[attr_name]
+        pass
 
 
 versatileimagefield_registry = VersatileImageFieldRegistry()

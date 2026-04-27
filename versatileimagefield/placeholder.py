@@ -15,18 +15,11 @@ class PlaceholderImage(object):
     _image_data = empty
 
     def setup(self):
-        if isinstance(self.file, ContentFile):
-            image_data = self.file
-        else:
-            image_data = ContentFile(self.file.read(), name=self.name)
-        self._image_data = image_data
-        self.file.close()
+        pass
 
     @property
     def image_data(self):
-        if self._image_data is empty:
-            self.setup()
-        return self._image_data
+        pass
 
 
 class OnDiscPlaceholderImage(PlaceholderImage):
@@ -42,12 +35,7 @@ class OnDiscPlaceholderImage(PlaceholderImage):
         self.path = path
 
     def setup(self):
-        folder, name = os.path.split(self.path)
-        with open(self.path, 'rb') as file:
-            content_file = ContentFile(file.read(), name=name)
-        self.file = content_file
-        self.name = name
-        super(OnDiscPlaceholderImage, self).setup()
+        pass
 
 
 class OnStoragePlaceholderImage(PlaceholderImage):
@@ -65,9 +53,4 @@ class OnStoragePlaceholderImage(PlaceholderImage):
         self.storage = storage
 
     def setup(self):
-        storage = self.storage or default_storage
-        file = storage.open(self.path)
-        folder, name = os.path.split(self.path)
-        self.file = file
-        self.name = name
-        super(OnStoragePlaceholderImage, self).setup()
+        pass

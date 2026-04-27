@@ -49,13 +49,7 @@ class FilteredImage(DeleteAndClearCacheMixIn, ProcessedImage):
         `save_path_on_storage`: Where on self.storage to save the filtered
                                 image
         """
-
-        image, file_ext, image_format, mime_type = self.retrieve_image(
-            path_to_image
-        )
-        image, save_kwargs = self.preprocess(image, image_format)
-        imagefile = self.process_image(image, image_format, save_kwargs)
-        self.save_image(imagefile, save_path_on_storage, file_ext, mime_type)
+        pass
 
     def __str__(self):
         return self.url

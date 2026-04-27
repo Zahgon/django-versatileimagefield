@@ -9,17 +9,14 @@ from .widgets import (
 class SizedImageCenterpointMixIn(object):
 
     def compress(self, data_list):
-        return tuple(data_list)
+        pass
 
 
 class VersatileImageFormField(ImageField):
 
     def to_python(self, data):
         """Ensure data is prepped properly before handing off to ImageField."""
-        if data is not None:
-            if hasattr(data, 'open'):
-                data.open()
-            return super(VersatileImageFormField, self).to_python(data)
+        pass
 
 
 class VersatileImagePPOIClickField(SizedImageCenterpointMixIn, MultiValueField):
@@ -38,10 +35,7 @@ class VersatileImagePPOIClickField(SizedImageCenterpointMixIn, MultiValueField):
         )
 
     def bound_data(self, data, initial):
-        to_return = data
-        if data[0] is None:
-            to_return = initial
-        return to_return
+        pass
 
 
 class SizedImageCenterpointClickDjangoAdminField(VersatileImagePPOIClickField):
